@@ -1,21 +1,8 @@
-%% Model Pruning example
-% Take any pre-existing network and perform weight and neuron pruning
-% Source code in tensoorflow/python: 
-% https://colab.research.google.com/drive/1GBLFxyFQtTTve_EE5y1Ulo0RwnKk_h6J?usp=drive_open#scrollTo=gptJSUTOauhM
-% Explanation here:
-% https://towardsdatascience.com/pruning-deep-neural-network-56cae1ec5505
-clc;clear;close all;
-disp('Running model pruning example');
-%% 1. Load the network (original)
-load('example_net.mat');
-view(net);
+%% Pruning Algorithm (weight and neuron)
 net_or = net;
-% Record all outputs from the training set
-[x,t] = simplefit_dataset;
-y = net_or(x);
+y = net(x);
 perf = perform(net_or,t,y);
 perc = (abs(y-t)/t)*100;
-
 %% 2. Weight pruning
 perf2 = [];
 perc2 = [];
@@ -59,8 +46,8 @@ for k = [.25, .50, .60, .70, .80, .90, .95, .97, .99]
         end
         nor = vecnorm(w');
         temp = floor(tiedrank(nor));
-        temp = repmat(temp,size(w,1),1);
-        ranks{i} = reshape(temp,size(w));
+        temp = repmat(temp,size(w,2),1);
+        ranks{i} = temp';
         lower_bound_rank = ceil(max(max(ranks{i}*k)));
         ranks{i}(ranks{i} < lower_bound_rank) = 0;
         ranks{i}(ranks{i} >= lower_bound_rank) = 1;
@@ -80,7 +67,14 @@ end
 %% Plot accuracy results
 figure;
 plot([0 .25, .50, .60, .70, .80, .90, .95, .97, .99],[perf perf2])
+title([a(1) ' Weight pruning mse values'])
+figure;
+plot([0 .25, .50, .60, .70, .80, .90, .95, .97, .99],[perc perc2])
+title([a(1) ' Weight pruning percentage values'])
+
 figure;
 plot([0 .25, .50, .60, .70, .80, .90, .95, .97, .99],[perf perf3])
-
-
+title([a(1) ' Neuron pruning mse values'])
+figure;
+plot([0 .25, .50, .60, .70, .80, .90, .95, .97, .99],[perc perc3])
+title([a(1) ' Neuron pruning percentage values'])
