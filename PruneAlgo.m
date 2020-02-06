@@ -2,7 +2,7 @@
 net_or = net;
 y = net(x);
 perf = perform(net_or,t,y);
-perc = (abs(y-t)/t)*100;
+perc = sum(sum((abs(y-t))/t))./size(t,1);
 %% 2. Weight pruning
 perf2 = [];
 perc2 = [];
@@ -29,7 +29,8 @@ for k = [.25, .50, .60, .70, .80, .90, .95, .97, .99]
     % Test pruned network. Performance should decrease
     y2 = net(x);
     perf2 = [perf2 perform(net,t,y2)];
-    perc2 = [perc2 (abs(y2-t)/t)*100];
+    perc2 = [perc2 sum(sum((abs(y2-t))/t))./size(t,1)];
+    save([a{1,1} '/weight' num2str(k) '_net.mat'],'y2','net','y')
 end
 
 %% 3. Neuron pruning
@@ -61,7 +62,8 @@ for k = [.25, .50, .60, .70, .80, .90, .95, .97, .99]
     % Test pruned network. Performance should decrease
     y2 = net(x);
     perf3 = [perf3 perform(net,t,y2)];
-    perc3 = [perc3 (abs(y2-t)/t)*100];
+    perc3 = [perc3 sum(sum((abs(y2-t))/t))./size(t,1)];
+    save([a{1,1} '/neuron' num2str(k) '_net.mat'],'y2','net','y')
 end
 
 %% Plot accuracy results

@@ -13,11 +13,11 @@ for i=1:length(netfiles)
     % Load network
     load(netfiles(i).name);
     run PruneAlgo.m
-    try
-        run PruneAlgo.m;
-    catch
-        warning('Problem when running neuron pruning. Assigning incorrect shapes');
-        warning('W shape = [%d,%d]', size(w,1), size(w,2));
-        warning('temp shape = [%d,%d]', size(temp,1), size(temp,2));
-    end
+%     try
+%         run PruneAlgo.m;
+%     catch
+%         warning('Problem when running neuron pruning. Assigning incorrect shapes');
+%         warning('W shape = [%d,%d]', size(w,1), size(w,2));
+%         warning('temp shape = [%d,%d]', size(temp,1), size(temp,2));
+%     end
 end
